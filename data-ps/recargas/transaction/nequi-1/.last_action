@@ -1,0 +1,8 @@
+# Archivo persistente para guardar la última acción procesada por transactionId
+# Formato: {"transactionId": "TIDxxx", "action": "dinamica_logo", "update_id": 12345}
+{
+    "transactionId": "",
+    "lastAction": "",
+    "lastUpdateId": 0,
+    "timestamp": 0
+}

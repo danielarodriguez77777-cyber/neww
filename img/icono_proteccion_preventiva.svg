@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4B1E8A"/>
+      <stop offset="100%" stop-color="#2D165E"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#90E080"/>
+      <stop offset="100%" stop-color="#6DD768"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#2D165E" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Circular background badge -->
+  <circle cx="50" cy="50" r="46" fill="#F4FBF2" stroke="#E2F7DE" stroke-width="2"/>
+  
+  <!-- Outer Shield -->
+  <path d="M50 15 C65 15 78 22 78 35 C78 60 50 78 50 78 C50 78 22 60 22 35 C22 22 35 15 50 15 Z" 
+        fill="url(#shieldGrad)" filter="url(#shadow)"/>
+        
+  <!-- Inner Shield accent border -->
+  <path d="M50 20 C61 20 72 26 72 37 C72 57 50 72 50 72 C50 72 28 57 28 37 C28 26 39 20 50 20 Z" 
+        fill="none" stroke="url(#accentGrad)" stroke-width="2.5" stroke-dasharray="2 0"/>
+
+  <!-- Center Security Lock / Keyhole -->
+  <!-- Lock body -->
+  <rect x="40" y="44" width="20" height="16" rx="3.5" fill="url(#accentGrad)"/>
+  
+  <!-- Lock shackle -->
+  <path d="M44 44 V37 C44 33.686 46.686 31 50 31 C53.314 31 56 33.686 56 37 V44" 
+        stroke="url(#accentGrad)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        
+  <!-- Keyhole detail -->
+  <circle cx="50" cy="51" r="2.2" fill="#2D165E"/>
+  <path d="M49 52.5 L51 52.5 L51.5 56.5 L48.5 56.5 Z" fill="#2D165E"/>
+
+  <!-- Checkmark badge (bottom right) -->
+  <circle cx="68" cy="66" r="12" fill="#83DD7A" stroke="#FFFFFF" stroke-width="2.5"/>
+  <path d="M63 66 L66.5 69.5 L73.5 62.5" stroke="#2D165E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

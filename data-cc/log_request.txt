@@ -1,0 +1,48 @@
+RAW:
+{"number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"5306917746081343","expiry_month":"65","expiry_year":"7","cvv":"000","name":"jose prueba","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"5306917746081343","expiry_month":"65","expiry_year":"7","cvv":"000","name":"jose prueba","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"5585730119389025","expiry_month":"04","expiry_year":"2030","cvv":"Gsga","name":"Alberto","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"5585730119389025","expiry_month":"04","expiry_year":"2030","cvv":"Gsga","name":"Alberto","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"5585730119389025","expiry_month":"04","expiry_year":"2030","cvv":"Gsga","name":"Alberto","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"5585730119389025","expiry_month":"04","expiry_year":"2030","cvv":"Gsga","name":"Alberto","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"4915110252907418","expiry_month":"01","expiry_year":"2027","cvv":"460","name":"prueba jose","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"4111111111111111","expiry_month":"12","expiry_year":"2028","cvv":"888","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"4111111111111111","expiry_month":"12","expiry_year":"2028","cvv":"888","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{}}
+
+RAW:
+{"number":"4111111111111111","expiry_month":"12","expiry_year":"2028","cvv":"888","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{}}
+
+PAYLOAD ENVIADO:
+{"type":"card","number":"4111111111111111","expiry_month":"12","expiry_year":"2028","cvv":"888","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{}}
+

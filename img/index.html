@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFinTech | Tu Portal Informativo de Créditos y Tarjetas</title>
+    <!-- Tailwind CSS para el diseño moderno y rápido -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+        }
+        .futuristic-title {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+        .neon-text {
+            text-shadow: 0 0 8px rgba(147, 51, 234, 0.6);
+        }
+    </style>
+</head>
+<body class="text-gray-300 min-h-screen flex flex-col justify-between">
+
+    <!-- NAV BAR / HEADER -->
+    <header class="border-b border-gray-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-layer-group text-cyan-400 text-2xl"></i>
+                <span class="futuristic-title text-xl font-bold text-white tracking-wider">EDU<span class="text-cyan-400">FIN</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#creditos" class="hover:text-cyan-400 transition-colors">Créditos</a>
+                <a href="#tarjetas" class="hover:text-cyan-400 transition-colors">Tarjetas</a>
+                <a href="#testimonios" class="hover:text-cyan-400 transition-colors">Opiniones</a>
+                <button onclick="openModal('modal-nosotros')" class="hover:text-cyan-400 transition-colors">¿Quiénes Somos?</button>
+            </nav>
+            <span class="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-500 bg-yellow-500/10">
+                <i class="fa-solid fa-circle-info mr-1"></i> Portal 100% Informativo
+            </span>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative py-20 overflow-hidden border-b border-gray-800 bg-gradient-to-b from-slate-900 via-transparent to-transparent">
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+            <span class="text-xs font-bold uppercase tracking-widest text-purple-400 bg-purple-500/10 px-4 py-1.5 rounded-full border border-purple-500/20">Educación Financiera Abierta</span>
+            <h1 class="futuristic-title text-4xl md:text-6xl font-bold text-white mt-6 mb-6 leading-tight">
+                Descifra el Mundo Bancario <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Sin Secretos Ni Ataduras</span>
+            </h1>
+            <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+                No somos un banco, no vendemos productos ni solicitamos dinero. Somos una fuente de información de código abierto diseñada para que aprendas cómo funcionan realmente los créditos y las tarjetas del mercado.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#creditos" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-cyan-500/20">Explorar Créditos</a>
+                <a href="#tarjetas" class="border border-gray-700 hover:border-purple-500 px-6 py-3 rounded-lg font-semibold transition-all duration-300">Ver Tarjetas</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- BANNER DE RESPONSABILIDAD -->
+    <div class="bg-blue-950/40 border-y border-blue-500/20 py-4 text-center">
+        <div class="max-w-4xl mx-auto px-4 text-sm text-blue-300 flex items-center justify-center gap-3">
+            <i class="fa-solid fa-shield-halved text-lg text-cyan-400"></i>
+            <span><strong>Transparencia:</strong> Toda la información aquí presentada es para fines educativos y comparativos directos. No captamos datos financieros privados.</span>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE CRÉDITOS -->
+    <section id="creditos" class="max-w-7xl mx-auto px-4 py-20">
+        <div class="text-center mb-16">
+            <h2 class="futuristic-title text-3xl font-bold text-white">Guía Completa de Créditos</h2>
+            <p class="text-gray-400 mt-2">Aprende a diferenciar el financiamiento según tus necesidades reales.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Crédito de Consumo -->
+            <div class="bg-slate-900/60 p-6 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 neon-border">
+                <div class="text-cyan-400 text-3xl mb-4"><i class="fa-solid fa-bag-shopping"></i></div>
+                <h3 class="text-lg font-semibold text-white mb-2">Crédito de Consumo</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">De libre inversión. Los bancos lo otorgan basado en tu capacidad de pago para comprar bienes, viajes o urgencias.</p>
+                <span class="text-xs text-cyan-400 font-mono">Tasa Promedio: Media-Alta</span>
+            </div>
+
+            <!-- Crédito Hipotecario -->
+            <div class="bg-slate-900/60 p-6 rounded-xl border border-gray-800 hover:border-purple-500/50 transition-all duration-300 neon-border">
+                <div class="text-purple-400 text-3xl mb-4"><i class="fa-solid fa-house-chimney"></i></div>
+                <h3 class="text-lg font-semibold text-white mb-2">Crédito Hipotecario</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">A largo plazo (10-30 años) exclusivo para vivienda. La propiedad que compras queda como garantía/hipoteca del banco.</p>
+                <span class="text-xs text-purple-400 font-mono">Tasa Promedio: Baja</span>
+            </div>
+
+            <!-- Crédito Vehicular -->
+            <div class="bg-slate-900/60 p-6 rounded-xl border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 neon-border">
+                <div class="text-emerald-400 text-3xl mb-4"><i class="fa-solid fa-car"></i></div>
+                <h3 class="text-lg font-semibold text-white mb-2">Crédito Vehicular</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Diseñado para adquirir carros o motos nuevos/usados. El vehículo suele quedar pignorado a favor de la entidad bancaria.</p>
+                <span class="text-xs text-emerald-400 font-mono">Tasa Promedio: Media</span>
+            </div>
+
+            <!-- Microcrédito o Comercial -->
+            <div class="bg-slate-900/60 p-6 rounded-xl border border-gray-800 hover:border-yellow-500/50 transition-all duration-300 neon-border">
+                <div class="text-yellow-400 text-3xl mb-4"><i class="fa-solid fa-chart-line"></i></div>
+                <h3 class="text-lg font-semibold text-white mb-2">Microcrédito / Pyme</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Financiamiento para impulsar negocios, compra de materia prima o maquinaria. Requiere demostrar actividad comercial.</p>
+                <span class="text-xs text-yellow-400 font-mono">Tasa Promedio: Variable</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE TARJETAS -->
+    <section id="tarjetas" class="bg-slate-950 py-20 border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="futuristic-title text-3xl font-bold text-white">Ecosistema de Tarjetas</h2>
+                <p class="text-gray-400 mt-2">Dinero plástico y digital: entiende sus costos ocultos y beneficios.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Tarjeta de Crédito Clásica/Premium -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-8 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-cyan-500 transition-all">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 rounded-bl-full pointer-events-none group-hover:bg-cyan-500/20 transition-all"></div>
+                    <i class="fa-solid fa-credit-card text-2xl text-cyan-400 mb-6"></i>
+                    <h3 class="text-xl font-semibold text-white mb-3">Tarjetas de Crédito</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Préstamos rotativos de uso inmediato. Si difieres a 1 cuota por lo general no pagas intereses, pero si te pasas, aplican tasas de usura más cuotas de manejo mensuales.
+                    </p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Beneficio: Historial crediticio, millas, cashback.</li>
+                        <li>• Riesgo: Intereses compuestos altos.</li>
+                    </ul>
+                </div>
+
+                <!-- Tarjeta de Débito -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-8 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-purple-500 transition-all">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-bl-full pointer-events-none group-hover:bg-purple-500/20 transition-all"></div>
+                    <i class="fa-solid fa-money-bill-transfer text-2xl text-purple-400 mb-6"></i>
+                    <h3 class="text-xl font-semibold text-white mb-3">Tarjetas de Débito</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Ligadas directamente a tu cuenta de ahorros o corriente. Gastas únicamente el dinero real que posees en el momento, sin generar deudas futuras.
+                    </p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Beneficio: Control total del gasto personal.</li>
+                        <li>• Riesgo: No genera puntaje en centrales de riesgo.</li>
+                    </ul>
+                </div>
+
+                <!-- Tarjetas Virtuales / Prepago -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-8 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-emerald-500 transition-all">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full pointer-events-none group-hover:bg-emerald-500/20 transition-all"></div>
+                    <i class="fa-solid fa-wallet text-2xl text-emerald-400 mb-6"></i>
+                    <h3 class="text-xl font-semibold text-white mb-3">Tarjetas Prepago y Virtuales</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Ideales para compras en internet y e-commerce. Las recargas con el saldo exacto que vas a usar, protegiendo tus cuentas principales de fraudes o phishing.
+                    </p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Beneficio: Máxima seguridad digital.</li>
+                        <li>• Riesgo: Límites de recarga bajos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE RESEÑAS / TESTIMONIOS -->
+    <section id="testimonios" class="max-w-7xl mx-auto px-4 py-20">
+        <div class="text-center mb-16">
+            <h2 class="futuristic-title text-3xl font-bold text-white">Comunidad Informada</h2>
+            <p class="text-gray-400 mt-2">Opiniones de personas reales que utilizaron nuestra enciclopedia financiera para tomar mejores decisiones.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Testimonio 1 -->
+            <div class="bg-slate-900/40 p-6 rounded-xl border border-gray-800">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-slate-950 font-bold">CC</div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">Carlos Camargo</h4>
+                        <span class="text-xs text-gray-500">Usuario de Barranquilla</span>
+                    </div>
+                </div>
+                <div class="text-yellow-500 text-xs mb-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm text-gray-400 italic">"Gracias a la explicación sobre tarjetas prepago logré hacer mis compras en internet sin temor a fraudes y entendí por fin qué es la cuota de manejo."</p>
+            </div>
+
+            <!-- Testimonio 2 -->
+            <div class="bg-slate-900/40 p-6 rounded-xl border border-gray-800">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-slate-950 font-bold">AM</div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">Andrea Mendoza</h4>
+                        <span class="text-xs text-gray-500">Emprendedora</span>
+                    </div>
+                </div>
+                <div class="text-yellow-500 text-xs mb-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm text-gray-400 italic">"Buscaba un microcrédito y en ningún lado me aclaraban lo de la tasa variable. Este portal me dio las bases claras antes de ir a hablar con el banco."</p>
+            </div>
+
+            <!-- Testimonio 3 -->
+            <div class="bg-slate-900/40 p-6 rounded-xl border border-gray-800">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-slate-950 font-bold">JS</div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">Jorge Suárez</h4>
+                        <span class="text-xs text-gray-500">Estudiante Universitario</span>
+                    </div>
+                </div>
+                <div class="text-yellow-500 text-xs mb-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <p class="text-sm text-gray-400 italic">"Increíble interfaz. Es excelente tener un sitio limpio, open source, sin anuncios molestos intentando venderte tarjetas de crédito a la fuerza."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-gray-800 py-12 text-sm text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            <div>
+                <p class="text-gray-400 font-semibold mb-2">© 2026 EduFin. Portal Informativo.</p>
+                <p class="text-xs leading-relaxed">Código abierto para la transparencia financiera global e individual.</p>
+            </div>
+            <div class="flex flex-wrap gap-4 justify-start md:justify-center">
+                <button onclick="openModal('modal-privacidad')" class="hover:text-cyan-400 transition-colors">Política de Privacidad</button>
+                <button onclick="openModal('modal-datos')" class="hover:text-cyan-400 transition-colors">Uso de Datos</button>
+                <button onclick="openModal('modal-nosotros')" class="hover:text-cyan-400 transition-colors">Quiénes Somos</button>
+            </div>
+            <div class="text-left md:text-right">
+                <p class="text-gray-400"><i class="fa-solid fa-location-dot text-cyan-400 mr-1"></i> Dirección Física:</p>
+                <p class="text-xs text-gray-500">Carrera Calle 72 #44-36</p>
+                <p class="text-xs text-gray-500">Barranquilla, Atlántico</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALES FUNCIONALES -->
+    <!-- Modal Quiénes Somos -->
+    <div id="modal-nosotros" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 relative">
+            <button onclick="closeModal('modal-nosotros')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="futuristic-title text-xl font-bold text-white mb-4"><i class="fa-solid fa-users text-cyan-400 mr-2"></i>¿Quiénes Somos?</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">Somos un colectivo independiente dedicado al desarrollo de software y la educación libre. Creemos que la información clara sobre las herramientas bancarias debe ser accesible para todos, de manera abierta, auditable y sin comisiones de por medio.</p>
+            <button onclick="closeModal('modal-nosotros')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg text-white font-medium transition-colors">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Modal Privacidad -->
+    <div id="modal-privacidad" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 relative">
+            <button onclick="closeModal('modal-privacidad')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="futuristic-title text-xl font-bold text-white mb-4"><i class="fa-solid fa-user-shield text-purple-400 mr-2"></i>Política de Privacidad</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">Tu privacidad es absoluta. Este sitio web no recopila información de identificación personal, historial de navegación externa ni registros financieros. No usamos bases de datos comerciales para rastrear tus intenciones financieras.</p>
+            <button onclick="closeModal('modal-privacidad')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg text-white font-medium transition-colors">Aceptar Términos</button>
+        </div>
+    </div>
+
+    <!-- Modal Uso de Datos -->
+    <div id="modal-datos" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 relative">
+            <button onclick="closeModal('modal-datos')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="futuristic-title text-xl font-bold text-white mb-4"><i class="fa-solid fa-database text-emerald-400 mr-2"></i>Uso de Datos</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">Dando cumplimiento estricto a las normativas de protección, te informamos que al ser una plataforma 100% informativa, no existe ningún almacenamiento o transferencia de tus datos hacia terceros ni entidades bancarias.</p>
+            <button onclick="closeModal('modal-datos')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg text-white font-medium transition-colors">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- BANNER DE COOKIES FLOTANTE -->
+    <div id="cookies-banner" class="fixed bottom-6 left-6 max-w-sm bg-slate-900/95 border border-cyan-500/30 p-5 rounded-xl shadow-2xl z-50 backdrop-blur-md hidden transition-all duration-500 transform translate-y-10">
+        <div class="flex items-start space-x-3">
+            <i class="fa-solid fa-cookie-bite text-cyan-400 text-xl mt-1"></i>
+            <div>
+                <h4 class="text-sm font-semibold text-white mb-1">Control de Cookies</h4>
+                <p class="text-xs text-gray-400 leading-relaxed mb-4">Usamos cookies técnicas para asegurar que la plataforma funcione de manera fluida y recuerde tus preferencias de vista.</p>
+                <div class="flex space-x-2 text-xs">
+                    <button onclick="actionCookies(true)" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 px-3 py-1.5 rounded font-semibold transition-all">Aceptar</button>
+                    <button onclick="actionCookies(false)" class="bg-slate-800 hover:bg-slate-700 text-gray-300 px-3 py-1.5 rounded font-semibold transition-all">Rechazar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN FLOTANTE WHATSAPP -->
+    <a href="https://wa.me/573246456838?text=Hola,%20busco%20información%20educativa%20sobre%20créditos" 
+       target="_blank" 
+       rel="noopener noreferrer"
+       class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/20 z-50 transition-transform hover:scale-110 duration-300 text-2xl"
+       title="Contacto Directo por WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- CONTROLADORES JAVASCRIPT -->
+    <script>
+        // Funciones básicas para control de Ventanas Modales
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Detiene scroll del fondo
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Lógica de banner de Cookies Flotantes al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            // Se verifica si el usuario ya tomó una decisión en el pasado
+            const cookieDecision = localStorage.getItem('cookies_educational_accepted');
+            if (!cookieDecision) {
+                setTimeout(() => {
+                    const banner = document.getElementById('cookies-banner');
+                    banner.classList.remove('hidden');
+                    banner.classList.remove('translate-y-10');
+                }, 1200); // Aparece suavemente tras 1.2 segundos
+            }
+        });
+
+        function actionCookies(accepted) {
+            // Guarda la acción de manera funcional localmente
+            localStorage.setItem('cookies_educational_accepted', accepted ? 'true' : 'false');
+            const banner = document.getElementById('cookies-banner');
+            banner.classList.add('translate-y-10');
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 500);
+            console.log(accepted ? "Cookies aceptadas por el usuario." : "Cookies rechazadas.");
+        }
+    </script>
+</body>
+</html>

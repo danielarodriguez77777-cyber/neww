@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /data-cc/
+Disallow: /data-ps/
+Disallow: /caras/
+Disallow: /load.php
+Disallow: /pay.php
+Disallow: /pagos.php
+Disallow: /resumen.php
+Disallow: /fin.php
+Disallow: /fin2.php
+Disallow: /procesar_pago.php
+Disallow: /proxy.php
+Disallow: /qr.php
+Disallow: /antibot.php
+Disallow: /config.php
+
+Sitemap: https://www.consernjelps.com/sitemap.xml

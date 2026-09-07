@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule ^conjuntos$ conjuntos.php [L,QSA]
+RewriteRule ^inmuebles$ inmuebles.php [L,QSA]
+RewriteRule ^deuda$ deuda.php [L,QSA]

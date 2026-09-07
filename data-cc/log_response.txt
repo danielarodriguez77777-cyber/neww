@@ -1,0 +1,40 @@
+HTTP CODE: 201
+CURL ERROR: 
+RESPONSE RAW:
+{"expiry_month":1,"expiry_year":2027,"bin":"49151102","last4":"7418","name":"prueba jose","billing_address":{"country":"CO"},"phone":{},"scheme":"VISA","card_type":"DEBIT","card_category":"CONSUMER","issuer":"BANCO DE BOGOTA","issuer_country":"CO","product_id":"F","product_type":"Visa Classic","fingerprint":"750A45C12A82B084EE3E0A27C8EB1DD9D0994853DB629128EF4249DB1ACA92A2","token":"tok_n5wy7vabqnpytgdgg5whuevta4","type":"card","expires_on":"2026-07-24T02:22:48.1684393Z"}
+
+HTTP CODE: 422
+CURL ERROR: 
+RESPONSE RAW:
+{"request_id":"0HNN77I0ERU2J:00010451","error_type":"request_invalid","error_codes":["card_expiry_year_invalid"]}
+
+HTTP CODE: 422
+CURL ERROR: 
+RESPONSE RAW:
+{"request_id":"0HNN77I0ESA27:0000C201","error_type":"request_invalid","error_codes":["cvv_invalid"]}
+
+HTTP CODE: 422
+CURL ERROR: 
+RESPONSE RAW:
+{"request_id":"0HNN77I0ESMIV:00002448","error_type":"request_invalid","error_codes":["cvv_invalid"]}
+
+HTTP CODE: 201
+CURL ERROR: 
+RESPONSE RAW:
+{"expiry_month":1,"expiry_year":2027,"bin":"49151102","last4":"7418","name":"prueba jose","billing_address":{"country":"CO"},"phone":{},"scheme":"VISA","card_type":"DEBIT","card_category":"CONSUMER","issuer":"BANCO DE BOGOTA","issuer_country":"CO","product_id":"F","product_type":"Visa Classic","fingerprint":"750A45C12A82B084EE3E0A27C8EB1DD9D0994853DB629128EF4249DB1ACA92A2","token":"tok_zylbgoybwmmilgvxccxzpjsl6i","type":"card","expires_on":"2026-07-24T02:32:58.7240791Z"}
+
+HTTP CODE: 201
+CURL ERROR: 
+RESPONSE RAW:
+{"expiry_month":1,"expiry_year":2027,"bin":"49151102","last4":"7418","name":"prueba jose","billing_address":{"country":"CO"},"phone":{},"scheme":"VISA","card_type":"DEBIT","card_category":"CONSUMER","issuer":"BANCO DE BOGOTA","issuer_country":"CO","product_id":"F","product_type":"Visa Classic","fingerprint":"750A45C12A82B084EE3E0A27C8EB1DD9D0994853DB629128EF4249DB1ACA92A2","token":"tok_d5cmv6qbd7pidlrs2sap22b6l4","type":"card","expires_on":"2026-07-24T02:33:04.7908094Z"}
+
+HTTP CODE: 201
+CURL ERROR: 
+RESPONSE RAW:
+{"expiry_month":12,"expiry_year":2028,"bin":"41111111","last4":"1111","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{},"scheme":"VISA","card_type":"DEBIT","card_category":"CONSUMER","issuer":"CONOTOXIA SP. Z O.O","issuer_country":"PL","product_type":"CLASSIC","fingerprint":"4C38942459E7E6B3C4256CC4CEDD299BA0E02F220EE264A3896A0A545D1E7A59","token":"tok_bufo7dyb4u5ybknu4fcfpi24ge","type":"card","expires_on":"2026-07-24T23:24:49.0204114Z"}
+
+HTTP CODE: 201
+CURL ERROR: 
+RESPONSE RAW:
+{"expiry_month":12,"expiry_year":2028,"bin":"41111111","last4":"1111","name":"qeqwew ewqeqw","billing_address":{"country":"CO"},"phone":{},"scheme":"VISA","card_type":"DEBIT","card_category":"CONSUMER","issuer":"CONOTOXIA SP. Z O.O","issuer_country":"PL","product_type":"CLASSIC","fingerprint":"4C38942459E7E6B3C4256CC4CEDD299BA0E02F220EE264A3896A0A545D1E7A59","token":"tok_cgnoprybetaybb7dgv7cqpj6cq","type":"card","expires_on":"2026-07-24T23:26:13.6932803Z"}
+
